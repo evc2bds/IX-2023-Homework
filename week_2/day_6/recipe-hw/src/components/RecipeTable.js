@@ -1,47 +1,32 @@
-import React from 'react'
-import './RecipeTable.css'
+import React from "react";
+import "./RecipeTable.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function RecipeTable(props) {
   return (
-    <div>
-        <table className='table mt-5'>
-            <thead>
-                <tr>
-                <th>Recipes</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                {
-                    props.recipes.map((recipe) => {
-                        return (
-                            <tr key = {recipe.recipeName}>
-                                <td>
-                                    <div className='card p-4'>
-                                        <img className="displaySize" src={recipe.picture} alt="RecipePic" ></img>
-                                        
-                                        <div className="card-body">
-                                        <h5 className="card-title">{recipe.recipeName}</h5>
-                                        <p className="card-text">
-                                            <div>
-                                                {recipe.ingredients}
-                                                {recipe.directions}
-                                            </div>
-                                            <div>
-                                                {recipe.directions}
-                                            </div>
+    <div className="wrapper">
+      {props.recipes.map((recipe) => {
+        return (
+          <div className="card">
+            <img
+              className="card__img"
+              src={recipe.picture}
+              alt="RecipePic"
+            ></img>
+            <div className="card__body">
+              <h5 className="card__title">{recipe.recipeName}</h5>
+              <p className="card__description">{recipe.description}</p>
+              <button className="btn btn-light">View Recipe</button>
+              
+              <div className='action-buttons'>
+                <button className="bi bi-pencil-square" onClick={()=> props.onRecipeEdit(recipe)}></button>
+                <button className="bi bi-trash" onClick={()=> props.onRecipeDelete(recipe)}></button>
+              </div>
 
-                                        </p>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        );
-                    })
-                }
-
-            </tbody>
-
-        </table>
+            </div>
+          </div>
+        );
+      })}
     </div>
-  )
+  );
 }
