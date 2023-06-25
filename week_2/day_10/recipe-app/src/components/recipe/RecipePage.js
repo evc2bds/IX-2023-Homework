@@ -8,8 +8,9 @@ import RecipeGrid from "./RecipeGrid";
 
 import RecipeService from "../../services/recipe-service";
 
-export default function RecipePage() {
+export default function RecipePage(props) {
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!recipes.length) {
@@ -18,12 +19,14 @@ export default function RecipePage() {
   }, []);
 
   async function onInitialLoad() {
+    setLoading(true);
     try {
       const recipes = await RecipeService.fetchRecipes();
-      setRecipes(recipes);
+      setRecipes(recipes.filter((recipe) => recipe.userId === props.user.uid)); //only see recipes made by user logged in
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   }
 
   async function onRecipeCreated(
@@ -35,7 +38,7 @@ export default function RecipePage() {
   ) {
     //create the Recipe
     const recipe = await RecipeService.createRecipe(
-      new Recipe(null, name, description, ingredients, directions, picture)
+      new Recipe(null, name, description, ingredients, directions, picture, props.user.uid)
     );
 
     //add the recipe to the recipes state
@@ -59,6 +62,7 @@ export default function RecipePage() {
         <p>Our firebase Recipes List</p>
         <RecipeGrid
           recipes={recipes}
+          loading={loading}
           onRecipeDelete={onRecipeDelete}
         ></RecipeGrid>
 
